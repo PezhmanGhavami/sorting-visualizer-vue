@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import Play from "@/assets/svgs/play.svg";
 import Pause from "@/assets/svgs/pause.svg";
@@ -58,6 +58,8 @@ const handleFlow = () => {
       break;
   }
 };
+
+watch(sortType, props.resetTheArray);
 </script>
 
 <template>
@@ -78,7 +80,7 @@ const handleFlow = () => {
           </div>
 
           <div class="nav-settings-item">
-            <label htmlFor="bar-count"> Bar Count: </label>
+            <label for="bar-count"> Bar Count: </label>
             <span>
               {{ ` ${barInfo.barCount} Bars ` }}
               <span
@@ -112,7 +114,7 @@ const handleFlow = () => {
           </div>
 
           <div class="nav-settings-item">
-            <label htmlFor="animation-speed"> Frame Delay: </label>
+            <label for="animation-speed"> Frame Delay: </label>
             <span>
               {{ animationState.frameDelay }}ms
               <span class="info" tabIndex="{0}" data-info="Lower is faster"> {{ " ⓘ" }} </span>
@@ -130,8 +132,13 @@ const handleFlow = () => {
           </div>
 
           <div class="nav-settings-item">
-            <label htmlFor="sort-type"> Sort Algorithm: </label>
-            <select v-model="sortType" id="sort-type" name="sortType">
+            <label for="sort-type"> Sort Algorithm: </label>
+            <select
+              v-model="sortType"
+              id="sort-type"
+              name="sortType"
+              :disabled="animationState.playback"
+            >
               <option value="BUBBLE">Bubble Sort</option>
               <option value="INSERTION">Insertion Sort</option>
               <option value="SELECTION">Selection Sort</option>

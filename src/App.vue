@@ -46,7 +46,6 @@ const togglePlayback = () => {
     ...animationState.value,
     playback: !animationState.value.playback,
   };
-  console.log("playback changed");
 };
 
 const closeToast = () => {
@@ -58,7 +57,7 @@ const changeAnimationSpeed = (value: number) => {
 
   value = value > maxFrameDelay ? maxFrameDelay : value < minFrameDelay ? minFrameDelay : value;
 
-  animationState.value.frameDelay = value;
+  animationState.value = { ...animationState.value, frameDelay: value };
 };
 
 const changeBarCount = (value: number) => {
@@ -72,7 +71,7 @@ const changeCurrentFrame = (value: number) => {
       : value < 0
       ? 0
       : value;
-  animationState.value.currentFrame = value;
+  animationState.value = { ...animationState.value, currentFrame: value };
 };
 
 const setupAnimation = (animationData: IAnimationData) => {
@@ -108,6 +107,7 @@ const animateQuickSort = () => {
 
 const handleResize = () => {
   windowDimensions.value = getWindowDimensions();
+  resetBarArray();
 };
 
 const getCorrectBarCount = (currentBars: number): number => {
@@ -120,7 +120,6 @@ const getCorrectBarCount = (currentBars: number): number => {
   return currentBars;
 };
 
-// [barHeightMax, barCount, getCorrectBarCount];
 const resetBarArray = () => {
   const localArray: number[] = [];
   for (let i = 0; i < barCount.value; i++) {
@@ -138,17 +137,12 @@ const resetBarArray = () => {
     colors: new Array(barCount.value).fill(barColors.NOT_SORTED),
   };
   dataSeries.value = getInitialDataSeries();
-  animationState.value = getInitialAnimationState();
+  animationState.value = { ...animationState.value, currentFrame: 0, playback: false };
 };
 
 const runTheAnimation = () => {
-  console.log("runAnimation");
   if (animationState.value.currentFrame < dataSeries.value.atFrame.length) {
-    console.log("frame ok");
-
     if (animationState.value.playback) {
-      console.log("playbakc ok");
-
       setTimeout(() => {
         bars.value = {
           colors: [...dataSeries.value.atFrameColors[animationState.value.currentFrame]],
@@ -160,8 +154,6 @@ const runTheAnimation = () => {
         };
       }, animationState.value.frameDelay);
     } else {
-      console.log("playback not ok");
-
       bars.value = {
         colors: [...dataSeries.value.atFrameColors[animationState.value.currentFrame]],
         heights: [...dataSeries.value.atFrame[animationState.value.currentFrame]],
@@ -172,8 +164,6 @@ const runTheAnimation = () => {
     dataSeries.value.atFrame.length &&
     animationState.value.currentFrame >= dataSeries.value.atFrame.length
   ) {
-    console.log("STOP");
-
     togglePlayback();
   }
 };
@@ -189,7 +179,7 @@ onBeforeUnmount(() => {
 });
 
 watch([dataSeries, animationState], runTheAnimation);
-watch([barCount], resetBarArray);
+watch(barCount, resetBarArray);
 </script>
 
 <template>
