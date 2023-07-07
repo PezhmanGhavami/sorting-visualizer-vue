@@ -1,15 +1,18 @@
 {
+  "homepage": "https://pezhmanghavami.github.io/sorting-visualizer-vue/",
   "name": "sorting-visualizer",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "build": "npm run type-check && npm run build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "vite-svg-loader": "^4.0.0",
@@ -25,7 +28,7 @@
     "@vue/tsconfig": "^0.4.0",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
-    "npm-run-all": "^1.7.0",
+    "gh-pages": "^5.0.0",
     "prettier": "^2.8.8",
     "typescript": "~5.0.4",
     "vite": "^4.3.9",
